@@ -1,0 +1,96 @@
+# ==============================
+# Dependencies
+# ==============================
+node_modules/
+*/node_modules/
+
+# ==============================
+# Environment Variables
+# ==============================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Keep example environment file
+!.env.example
+
+# ==============================
+# Build / Production
+# ==============================
+dist/
+build/
+*/dist/
+*/build/
+
+# ==============================
+# Logs
+# ==============================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==============================
+# Cache
+# ==============================
+.cache/
+.parcel-cache/
+.vite/
+.eslintcache
+*.tsbuildinfo
+
+# ==============================
+# Testing / Coverage
+# ==============================
+coverage/
+.nyc_output/
+
+# ==============================
+# OS Generated Files
+# ==============================
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ==============================
+# IDE / Editors
+# ==============================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+*.iml
+
+# ==============================
+# Temporary Files
+# ==============================
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ==============================
+# React / Next / Frontend
+# ==============================
+.react/
+.next/
+out/
+
+# ==============================
+# Server / Node
+# ==============================
+.nodemon-debug
+.nodemon.json
+
+# ==============================
+# Miscellaneous
+# ==============================
+*.swp
+*.swo
