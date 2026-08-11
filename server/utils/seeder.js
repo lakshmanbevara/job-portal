@@ -48,7 +48,7 @@ const seedDB = async () => {
     const adminUser = await User.create({
       name: 'System Admin',
       email: 'admin@adminpanel.com',
-      password: 'admin#18',
+      password: 'password123',
       role: 'admin',
       isVerified: true
     });
@@ -104,7 +104,7 @@ const seedDB = async () => {
     const student1User = await User.create({
       name: 'Alex Johnson',
       email: 'student@gmail.com',
-      password: 'student#',
+      password: 'password123',
       role: 'student',
       isVerified: true
     });
