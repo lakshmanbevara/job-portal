@@ -1,11 +1,17 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
-// Ensure uploads folder exists
-const uploadDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Determine upload directory based on environment
+let uploadDir = path.join(__dirname, '../uploads');
+if (process.env.VERCEL) {
+  uploadDir = os.tmpdir();
+} else {
+  // Ensure uploads folder exists in local development
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
 }
 
 // Storage engine configuration
