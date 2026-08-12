@@ -9,7 +9,7 @@
     "server": "npm run dev --prefix server",
     "seed": "npm run seed --prefix server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm install --prefix client && npm run build --prefix client",
+    "build": "npm run install-all && npm run build --prefix client",
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {},
