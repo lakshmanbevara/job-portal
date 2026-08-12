@@ -9,13 +9,14 @@ const jwt = require('jsonwebtoken');
 const sendTokenResponse = (user, statusCode, res) => {
   // Generate token
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallbackjwtsecretkey123456', {
-    expiresIn: process.env.JWT_EXPIRE || '30d'
+    expiresIn: process.env.JWT_EXPIRE || process.env.JWT_EXPIRES_IN || '30d'
   });
 
   const cookieOptions = {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production'
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   };
 
   res

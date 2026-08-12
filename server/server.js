@@ -18,6 +18,17 @@ connectDB();
 
 const app = express();
 
+// Middleware to ensure database connection is ready for serverless requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Database connection error in request middleware:', err.message);
+    res.status(500).json({ success: false, message: 'Database connection failed. Please check MONGO_URI / MONGODB_URI in environment variables.' });
+  }
+});
+
 // Body parser
 app.use(express.json());
 
@@ -48,16 +59,9 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests without an origin
-      // such as Postman/server-side requests
-      if (!origin) {
+      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin) || process.env.VERCEL) {
         return callback(null, true);
       }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
       return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
