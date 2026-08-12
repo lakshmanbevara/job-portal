@@ -18,7 +18,7 @@ const Message = require('../models/Message');
 
 const seedDB = async () => {
   try {
-    const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/studentjobportal';
+    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/studentjobportal';
     await mongoose.connect(mongoUri);
     console.log('Connected to DB for seeding...');
 
