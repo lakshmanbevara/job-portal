@@ -10,9 +10,11 @@ const Admin = require('./models/Admin');
 
 const path = require('path');
 dotenv.config({ path: path.join(__dirname, '../.env') });
+const dns=require('dns');
 
 const connectDB = async () => {
   try {
+      dns.setServers(["8.8.8.8","1.1.1.1"]);
     const dbUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/studentjobportal';
     const conn = await mongoose.connect(dbUri);
     console.log(`MongoDB Connected: ${conn.connection.host}`);

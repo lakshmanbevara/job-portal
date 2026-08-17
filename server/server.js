@@ -11,7 +11,8 @@ const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
 // Load environment variables
-dotenv.config();
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+//dotenv.config();
 
 // Connect to MongoDB
 connectDB();
