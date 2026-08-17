@@ -3,18 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMail, FiLock, FiArrowRight, FiUser, FiBriefcase, FiShield, FiChevronDown } from 'react-icons/fi';
+import { FiMail, FiLock, FiArrowRight, FiUser, FiBriefcase, FiShield, FiChevronDown, FiEye, FiEyeOff } from 'react-icons/fi';
 
 const Login = () => {
   const { login } = useAuth();
-  // Two tabs: 'student' | 'org' (covers both company and admin)
   const [tab, setTab] = useState('student');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  // Sub-role picker for org tab
-  const [orgRole, setOrgRole] = useState('company'); // 'company' | 'admin'
-  const [showOrgDropdown, setShowOrgDropdown] = useState(false);
   const navigate = useNavigate();
 
   // Config per tab
@@ -23,19 +20,22 @@ const Login = () => {
       title: 'Student Portal',
       subtitle: 'Search internships, apply to jobs, and manage your academic profile.',
       icon: <FiUser className="w-5 h-5" />,
-      accentBg: 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700',
-      accentText: 'text-indigo-600 dark:text-indigo-300',
       btnLabel: 'Sign In as Student',
       emailLabel: 'Student Email',
     },
-    org: {
-      title: orgRole === 'admin' ? 'Admin Control Panel' : 'Company / Recruiter Portal',
-      subtitle: orgRole === 'admin'
-        ? 'Access analytics, verify companies, and manage the platform.'
-        : 'Post openings, track applicants, and message students.',
-      icon: orgRole === 'admin' ? <FiShield className="w-5 h-5" /> : <FiBriefcase className="w-5 h-5" />,
-      btnLabel: orgRole === 'admin' ? 'Sign In as Admin' : 'Sign In as Company',
-      emailLabel: orgRole === 'admin' ? 'Admin Email' : 'Corporate Email',
+    company: {
+      title: 'Company / Recruiter Portal',
+      subtitle: 'Post openings, track applicants, and message students.',
+      icon: <FiBriefcase className="w-5 h-5" />,
+      btnLabel: 'Sign In as Company',
+      emailLabel: 'Corporate Email',
+    },
+    admin: {
+      title: 'Admin Control Panel',
+      subtitle: 'Access analytics, verify companies, and manage the platform.',
+      icon: <FiShield className="w-5 h-5" />,
+      btnLabel: 'Sign In as Admin',
+      emailLabel: 'Admin Email',
     }
   };
 
@@ -43,14 +43,6 @@ const Login = () => {
 
   const handleTabSwitch = (newTab) => {
     setTab(newTab);
-    setEmail('');
-    setPassword('');
-    setShowOrgDropdown(false);
-  };
-
-  const handleOrgRoleChange = (role) => {
-    setOrgRole(role);
-    setShowOrgDropdown(false);
     setEmail('');
     setPassword('');
   };
@@ -104,69 +96,41 @@ const Login = () => {
           {/* Divider */}
           <div className="w-px bg-slate-200 dark:bg-slate-700" />
 
-          {/* Admin / Company Combined Tab */}
-          <div className="flex-1 relative">
-            <button
-              type="button"
-              onClick={() => { handleTabSwitch('org'); setShowOrgDropdown(!showOrgDropdown); }}
-              className={`w-full h-full flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${
-                tab === 'org'
-                  ? orgRole === 'admin'
-                    ? 'bg-purple-600 text-white shadow-inner'
-                    : 'bg-emerald-600 text-white shadow-inner'
-                  : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 dark:text-slate-400'
-              }`}
-            >
-              {orgRole === 'admin' ? <FiShield className="w-4 h-4" /> : <FiBriefcase className="w-4 h-4" />}
-              {orgRole === 'admin' ? 'Admin' : 'Company'}
-              <FiChevronDown className={`w-3 h-3 transition-transform ${showOrgDropdown ? 'rotate-180' : ''}`} />
-            </button>
+          {/* Company Tab */}
+          <button
+            type="button"
+            onClick={() => handleTabSwitch('company')}
+            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${
+              tab === 'company'
+                ? 'bg-emerald-600 text-white shadow-inner'
+                : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 dark:text-slate-400'
+            }`}
+          >
+            <FiBriefcase className="w-4 h-4" />
+            Company
+          </button>
 
-            {/* Dropdown to pick Company or Admin */}
-            <AnimatePresence>
-              {showOrgDropdown && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="absolute top-full left-0 right-0 z-50 mt-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden"
-                >
-                  <button
-                    type="button"
-                    onClick={() => handleOrgRoleChange('company')}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-left transition-colors ${
-                      orgRole === 'company' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
-                    }`}
-                  >
-                    <FiBriefcase className="w-4 h-4 text-emerald-500" />
-                    <div>
-                      <div>Company / Recruiter</div>
-                      <div className="text-[10px] font-normal text-slate-400">Post jobs, track applicants</div>
-                    </div>
-                  </button>
-                  <div className="border-t border-slate-100 dark:border-slate-700" />
-                  <button
-                    type="button"
-                    onClick={() => handleOrgRoleChange('admin')}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-left transition-colors ${
-                      orgRole === 'admin' ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
-                    }`}
-                  >
-                    <FiShield className="w-4 h-4 text-purple-500" />
-                    <div>
-                      <div>System Administrator</div>
-                      <div className="text-[10px] font-normal text-slate-400">Analytics, verifications, moderation</div>
-                    </div>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Divider */}
+          <div className="w-px bg-slate-200 dark:bg-slate-700" />
+
+          {/* Admin Tab */}
+          <button
+            type="button"
+            onClick={() => handleTabSwitch('admin')}
+            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${
+              tab === 'admin'
+                ? 'bg-purple-600 text-white shadow-inner'
+                : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 dark:text-slate-400'
+            }`}
+          >
+            <FiShield className="w-4 h-4" />
+            Admin
+          </button>
         </div>
 
         {/* ── Main Card ── */}
         <motion.div
-          key={tab + orgRole}
+          key={tab}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
@@ -174,7 +138,7 @@ const Login = () => {
         >
           {/* Header */}
           <div className="text-center space-y-1.5">
-            <div className={`inline-flex items-center justify-center w-11 h-11 rounded-2xl mb-1 ${tab === 'student' ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300' : orgRole === 'admin' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300' : 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300'}`}>
+            <div className={`inline-flex items-center justify-center w-11 h-11 rounded-2xl mb-1 ${tab === 'student' ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300' : tab === 'admin' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300' : 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300'}`}>
               {currentConfig.icon}
             </div>
             <h2 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white font-heading">
@@ -216,13 +180,20 @@ const Login = () => {
               <div className="relative">
                 <FiLock className="absolute left-3.5 top-3.5 text-slate-400" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition-colors"
+                  className="w-full pl-10 pr-12 py-3 text-sm bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition-colors"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
+                >
+                  {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
@@ -232,7 +203,7 @@ const Login = () => {
               className={`w-full py-3.5 text-white text-sm font-bold rounded-xl hover:opacity-95 shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2 ${
                 tab === 'student'
                   ? 'bg-gradient-to-r from-indigo-600 to-violet-600 shadow-indigo-500/25'
-                  : orgRole === 'admin'
+                  : tab === 'admin'
                   ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 shadow-purple-500/25'
                   : 'bg-gradient-to-r from-emerald-600 to-teal-600 shadow-emerald-500/25'
               }`}
@@ -246,12 +217,14 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-700/60 text-xs text-slate-500 dark:text-slate-400">
-            New here?{' '}
-            <Link to="/register" className="font-bold text-primary hover:underline">
-              Create an Account
-            </Link>
-          </div>
+          {tab !== 'admin' && (
+            <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-700/60 text-xs text-slate-500 dark:text-slate-400">
+              New here?{' '}
+              <Link to="/register" className="font-bold text-primary hover:underline">
+                Create an Account
+              </Link>
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </div>

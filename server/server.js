@@ -121,6 +121,10 @@ app.use(
 // HEALTH CHECK
 // ================================
 
+app.get('/', (req, res) => {
+  res.send('Student Job Portal API is running...');
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
