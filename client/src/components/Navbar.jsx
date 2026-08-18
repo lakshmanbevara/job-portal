@@ -72,6 +72,8 @@ const Navbar = () => {
     if (!user) {
       return [
         { name: 'Home', path: '/home', icon: <FiCompass className="mr-1" /> },
+        { name: 'Jobs', path: '/jobs', icon: <FiBriefcase className="mr-1" /> },
+        { name: 'Companies', path: '/companies', icon: <FiLayers className="mr-1" /> },
         { name: 'About', path: '/about', icon: <FiInfo className="mr-1" /> },
         { name: 'Contact', path: '/contact', icon: <FiMail className="mr-1" /> },
       ];
