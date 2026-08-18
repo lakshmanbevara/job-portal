@@ -180,15 +180,21 @@ const JobDetails = () => {
             {/* Header Box */}
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-slate-100 dark:border-slate-700/60 rounded-3xl smooth-shadow p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
               <div className="flex items-center space-x-5">
-                <img
+                  <img
                   src={companyLogo}
-                  alt={job.company?.companyName}
+                  alt={job.company?.companyName || 'Platform'}
                   className="w-16 h-16 rounded-2xl object-cover border border-slate-100 dark:border-slate-700"
                 />
                 <div>
                   <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white font-heading leading-tight">{job.title}</h1>
-                  <p className="text-sm font-semibold text-primary mt-1 hover:underline">
-                    <Link to={`/companies/${job.company?._id}`}>{job.company?.companyName}</Link>
+                  <p className="text-sm font-semibold text-primary mt-1">
+                    {job.company ? (
+                      <Link to={`/companies/${job.company._id}`} className="hover:underline">
+                        {job.company.companyName}
+                      </Link>
+                    ) : (
+                      <span>Platform</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -337,10 +343,12 @@ const JobDetails = () => {
                       </a>
                     </div>
                   )}
-                  <div className="flex items-center">
-                    <FiMapPin className="mr-2 text-slate-400" />
-                    <span>Based in {job.company?.location}</span>
-                  </div>
+                  {job.company?.location && (
+                    <div className="flex items-center">
+                      <FiMapPin className="mr-2 text-slate-400" />
+                      <span>Based in {job.company.location}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
