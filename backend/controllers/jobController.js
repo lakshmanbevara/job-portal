@@ -8,15 +8,23 @@ const Category = require('../models/Category');
 // @access  Private (Company)
 exports.createJob = async (req, res, next) => {
   try {
-    const { title, location, minSalary, maxSalary, currency, experienceRequired, skillsRequired, category, jobType, workMode, description, requirements, benefits } = req.body;
+    const { title, location, minSalary, maxSalary, currency, experienceRequired, skillsRequired, category, jobType, workMode, description, requirements, benefits, companyId } = req.body;
 
-    if (!req.company) {
+    let targetCompany = null;
+
+    if (req.user && req.user.role === 'admin') {
+      // Admin can post for a specific company or as the platform
+      if (companyId) {
+        targetCompany = companyId;
+      }
+    } else if (req.company) {
+      targetCompany = req.company._id;
+    } else {
       return res.status(400).json({ success: false, message: 'Only registered companies can post jobs. Please complete your company profile.' });
     }
 
-    const job = await Job.create({
+    const jobData = {
       title,
-      company: req.company._id,
       location,
       salary: { min: minSalary, max: maxSalary, currency },
       experienceRequired,
@@ -27,7 +35,13 @@ exports.createJob = async (req, res, next) => {
       description,
       requirements: Array.isArray(requirements) ? requirements : requirements.split('\n').filter(r => r.trim() !== ''),
       benefits: Array.isArray(benefits) ? benefits : benefits.split('\n').filter(b => b.trim() !== '')
-    });
+    };
+
+    if (targetCompany) {
+      jobData.company = targetCompany;
+    }
+
+    const job = await Job.create(jobData);
 
     res.status(201).json({ success: true, data: job });
   } catch (error) {

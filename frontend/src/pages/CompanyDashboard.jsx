@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { 
   FiBriefcase, FiPlusCircle, FiList, FiUsers, FiSend, 
   FiFileText, FiCalendar, FiClock, FiCheck, FiX, FiCheckCircle, 
-  FiMessageSquare, FiUpload, FiGlobe, FiMapPin, FiCpu 
+  FiMessageSquare, FiUpload, FiGlobe, FiMapPin, FiCpu, FiDollarSign
 } from 'react-icons/fi';
 
 const CompanyDashboard = () => {
@@ -467,32 +467,40 @@ const CompanyDashboard = () => {
                 </select>
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                  Min Monthly Salary * {minSalary ? `(Equivalent to ₹${((Number(minSalary) * 12) / 100000).toFixed(1).replace('.0', '')} LPA)` : ''}
-                </label>
-                <input
-                  type="number"
-                  value={minSalary}
-                  onChange={(e) => setMinSalary(e.target.value)}
-                  required
-                  placeholder="e.g. 20000"
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
-                />
-              </div>
+              <div className="col-span-1 sm:col-span-2 bg-warning/10 dark:bg-warning/20 border-2 border-warning/50 rounded-2xl p-4 my-2">
+                <div className="flex items-center mb-3">
+                  <FiDollarSign className="w-5 h-5 text-warning mr-2" />
+                  <h4 className="text-sm font-extrabold text-warning uppercase tracking-wider">Salary Information (Mandatory)</h4>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
+                      Min Monthly Salary * {minSalary ? `(Equivalent to ₹${((Number(minSalary) * 12) / 100000).toFixed(1).replace('.0', '')} LPA)` : ''}
+                    </label>
+                    <input
+                      type="number"
+                      value={minSalary}
+                      onChange={(e) => setMinSalary(e.target.value)}
+                      required
+                      placeholder="e.g. 20000"
+                      className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-700 border-2 border-warning/30 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-warning"
+                    />
+                  </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                  Max Monthly Salary * {maxSalary ? `(Equivalent to ₹${((Number(maxSalary) * 12) / 100000).toFixed(1).replace('.0', '')} LPA)` : ''}
-                </label>
-                <input
-                  type="number"
-                  value={maxSalary}
-                  onChange={(e) => setMaxSalary(e.target.value)}
-                  required
-                  placeholder="e.g. 35000"
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
-                />
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
+                      Max Monthly Salary * {maxSalary ? `(Equivalent to ₹${((Number(maxSalary) * 12) / 100000).toFixed(1).replace('.0', '')} LPA)` : ''}
+                    </label>
+                    <input
+                      type="number"
+                      value={maxSalary}
+                      onChange={(e) => setMaxSalary(e.target.value)}
+                      required
+                      placeholder="e.g. 35000"
+                      className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-700 border-2 border-warning/30 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-warning"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 

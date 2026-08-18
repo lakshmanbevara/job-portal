@@ -2,15 +2,15 @@
   "name": "student-job-portal",
   "version": "1.0.0",
   "description": "Student Job Portal MERN Stack Application",
-  "main": "server/server.js",
+  "main": "backend/server.js",
   "scripts": {
-    "install-all": "npm install --prefix server && npm install --prefix client",
-    "client": "npm run dev --prefix client",
-    "server": "npm run dev --prefix server",
-    "seed": "npm run seed --prefix server",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm run install-all && npm run build --prefix client && node -e \"const fs = require('fs'); if (fs.existsSync('client/dist')) { fs.cpSync('client/dist', 'public', { recursive: true }); fs.cpSync('client/dist', 'dist', { recursive: true }); }\"",
-    "start": "node server/server.js"
+    "install-all": "npm install --prefix backend && npm install --prefix frontend",
+    "frontend": "npm run dev --prefix frontend",
+    "backend": "npm run dev --prefix backend",
+    "seed": "npm run seed --prefix backend",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "build": "npm run install-all && npm run build --prefix frontend && node -e \"const fs = require('fs'); if (fs.existsSync('frontend/dist')) { fs.cpSync('frontend/dist', 'public', { recursive: true }); fs.cpSync('frontend/dist', 'dist', { recursive: true }); }\"",
+    "start": "node backend/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

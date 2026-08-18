@@ -34,7 +34,7 @@ const JobCard = ({ job, saved = false, onSaveToggle }) => {
   };
 
   // Safe fallback if company or logo is missing
-  const companyName = job.company?.companyName || 'Anonymous';
+  const companyName = job.company?.companyName || 'Platform';
   const companyLogo = job.company?.logo || 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?auto=format&fit=crop&q=80&w=100';
 
   return (

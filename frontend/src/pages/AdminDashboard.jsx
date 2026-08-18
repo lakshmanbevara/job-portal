@@ -51,6 +51,23 @@ const AdminDashboard = () => {
   const [showPassword, setShowPassword]       = useState(false);
   const regLogoRef = useRef(null);
 
+  // Add Job state
+  const [jobTitle, setJobTitle] = useState('');
+  const [jobCompanyId, setJobCompanyId] = useState('');
+  const [jobLocation, setJobLocation] = useState('');
+  const [jobMinSalary, setJobMinSalary] = useState('');
+  const [jobMaxSalary, setJobMaxSalary] = useState('');
+  const [jobExp, setJobExp] = useState('No Experience');
+  const [jobSkills, setJobSkills] = useState('');
+  const [jobCategory, setJobCategory] = useState('');
+  const [jobType, setJobType] = useState('Full Time');
+  const [jobWorkMode, setJobWorkMode] = useState('On-site');
+  const [jobDesc, setJobDesc] = useState('');
+  const [jobReqs, setJobReqs] = useState('');
+  const [jobBens, setJobBens] = useState('');
+  const [postingJob, setPostingJob] = useState(false);
+  const [categories, setCategories] = useState([]);
+
   // Statistics & Charts
   const [stats, setStats] = useState({ students: 0, companies: 0, jobs: 0, applications: 0 });
   const [growthData, setGrowthData] = useState({ labels: [], users: [], revenue: [] });
@@ -105,6 +122,18 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     loadAdminData();
+    const loadCategories = async () => {
+      try {
+        const res = await API.get('/categories');
+        if (res.data.success) {
+          setCategories(res.data.data);
+          if (res.data.data.length > 0) setJobCategory(res.data.data[0]._id);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadCategories();
   }, [activeTab]);
 
   const handleVerifyCompany = async (companyId) => {
@@ -233,6 +262,42 @@ const AdminDashboard = () => {
       setRegLogoUrl(ev.target.result);
     };
     reader.readAsDataURL(file);
+  };
+
+  // Add Job (admin action)
+  const handlePostJob = async (e) => {
+    e.preventDefault();
+    setPostingJob(true);
+    try {
+      const res = await API.post('/jobs', {
+        title: jobTitle,
+        companyId: jobCompanyId || null,
+        location: jobLocation,
+        minSalary: Number(jobMinSalary),
+        maxSalary: Number(jobMaxSalary),
+        currency: 'INR',
+        experienceRequired: jobExp,
+        skillsRequired: jobSkills,
+        category: jobCategory,
+        jobType: jobType,
+        workMode: jobWorkMode,
+        description: jobDesc,
+        requirements: jobReqs,
+        benefits: jobBens
+      });
+      if (res.data.success) {
+        toast.success('Job posted successfully! 🎉');
+        setJobTitle(''); setJobLocation(''); setJobMinSalary('');
+        setJobMaxSalary(''); setJobSkills(''); setJobDesc('');
+        setJobReqs(''); setJobBens(''); setJobCompanyId('');
+        loadAdminData();
+        setActiveTab('jobs');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error posting job');
+    } finally {
+      setPostingJob(false);
+    }
   };
 
   // ──────── SITE SETTINGS HANDLERS ────────
@@ -722,6 +787,208 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
+            </form>
+          </div>
+        )}
+
+        {/* ─────── Tab: Add Job ─────── */}
+        {activeTab === 'add-job' && (
+          <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 rounded-3xl p-6 md:p-8 smooth-shadow space-y-6">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-heading border-b pb-3 flex items-center mb-6">
+              <FiBriefcase className="mr-2 text-primary" /> Post a New Job
+            </h3>
+            <form onSubmit={handlePostJob} className="space-y-6">
+              
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Company (Optional)</label>
+                <select
+                  value={jobCompanyId}
+                  onChange={(e) => setJobCompanyId(e.target.value)}
+                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition-colors"
+                >
+                  <option value="">Platform (No Company)</option>
+                  {companies.map(c => (
+                    <option key={c._id} value={c._id}>{c.companyName}</option>
+                  ))}
+                </select>
+                <p className="text-[10px] text-slate-400">If selected, the job will be posted on behalf of this company.</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Job Title *</label>
+                  <input
+                    type="text"
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    required
+                    placeholder="e.g. Senior Frontend Developer"
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location *</label>
+                  <input
+                    type="text"
+                    value={jobLocation}
+                    onChange={(e) => setJobLocation(e.target.value)}
+                    required
+                    placeholder="e.g. Bangalore, Remote"
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Job Type</label>
+                  <select
+                    value={jobType}
+                    onChange={(e) => setJobType(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
+                  >
+                    <option value="Full Time">Full Time</option>
+                    <option value="Part Time">Part Time</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Walk-in">Walk-in</option>
+                    <option value="Government Jobs">Government Jobs</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Work Mode</label>
+                  <select
+                    value={jobWorkMode}
+                    onChange={(e) => setWorkMode(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
+                  >
+                    <option value="On-site">On-site</option>
+                    <option value="Remote">Remote</option>
+                    <option value="Hybrid">Hybrid</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Category *</label>
+                  <select
+                    value={jobCategory}
+                    onChange={(e) => setJobCategory(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
+                  >
+                    {categories.length === 0 && <option value="">No categories available</option>}
+                    {categories.map((cat) => (
+                      <option key={cat._id} value={cat._id}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Experience Level</label>
+                  <select
+                    value={jobExp}
+                    onChange={(e) => setJobExp(e.target.value)}
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
+                  >
+                    <option value="No Experience">No Experience</option>
+                    <option value="0-1 Years">0-1 Years</option>
+                    <option value="1-3 Years">1-3 Years</option>
+                    <option value="3-5 Years">3-5 Years</option>
+                    <option value="5+ Years">5+ Years</option>
+                  </select>
+                </div>
+
+                <div className="col-span-1 sm:col-span-2 bg-warning/10 dark:bg-warning/20 border-2 border-warning/50 rounded-2xl p-4 my-2">
+                  <div className="flex items-center mb-3">
+                    <FiDollarSign className="w-5 h-5 text-warning mr-2" />
+                    <h4 className="text-sm font-extrabold text-warning uppercase tracking-wider">Salary Information (Mandatory)</h4>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
+                        Min Monthly Salary * {jobMinSalary ? `(Equivalent to ₹${((Number(jobMinSalary) * 12) / 100000).toFixed(1).replace('.0', '')} LPA)` : ''}
+                      </label>
+                      <input
+                        type="number"
+                        value={jobMinSalary}
+                        onChange={(e) => setJobMinSalary(e.target.value)}
+                        required
+                        placeholder="e.g. 20000"
+                        className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-700 border-2 border-warning/30 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-warning"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
+                        Max Monthly Salary * {jobMaxSalary ? `(Equivalent to ₹${((Number(jobMaxSalary) * 12) / 100000).toFixed(1).replace('.0', '')} LPA)` : ''}
+                      </label>
+                      <input
+                        type="number"
+                        value={jobMaxSalary}
+                        onChange={(e) => setJobMaxSalary(e.target.value)}
+                        required
+                        placeholder="e.g. 35000"
+                        className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-700 border-2 border-warning/30 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-warning"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-1 sm:col-span-2 space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Key Skills *</label>
+                  <input
+                    type="text"
+                    value={jobSkills}
+                    onChange={(e) => setJobSkills(e.target.value)}
+                    required
+                    placeholder="e.g. React, Node.js, MongoDB (comma separated)"
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Job Description *</label>
+                <textarea
+                  value={jobDesc}
+                  onChange={(e) => setJobDesc(e.target.value)}
+                  required
+                  rows="4"
+                  placeholder="Describe the role, responsibilities, and team..."
+                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white resize-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Requirements</label>
+                  <textarea
+                    value={jobReqs}
+                    onChange={(e) => setJobReqs(e.target.value)}
+                    rows="3"
+                    placeholder="One requirement per line..."
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white resize-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Benefits & Perks</label>
+                  <textarea
+                    value={jobBens}
+                    onChange={(e) => setJobBens(e.target.value)}
+                    rows="3"
+                    placeholder="One benefit per line..."
+                    className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white resize-none"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={postingJob}
+                className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white font-bold text-sm rounded-xl shadow-lg hover:opacity-95 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <FiSend className="w-4 h-4" />
+                {postingJob ? 'Posting Job...' : 'Publish Job Listing'}
+              </button>
             </form>
           </div>
         )}

@@ -31,6 +31,7 @@ const Sidebar = ({ role }) => {
           { name: 'Manage Companies', path: '/admin-dashboard/companies', icon: <FiGrid className="w-5 h-5" /> },
           { name: 'Add Company', path: '/admin-dashboard/add-company', icon: <FiPlusCircle className="w-5 h-5" /> },
           { name: 'Manage Job Listings', path: '/admin-dashboard/jobs', icon: <FiBriefcase className="w-5 h-5" /> },
+          { name: 'Add Job', path: '/admin-dashboard/add-job', icon: <FiPlusCircle className="w-5 h-5" /> },
           { name: 'Site Settings', path: '/admin-dashboard/settings', icon: <FiSettings className="w-5 h-5" /> }
         ];
       default:

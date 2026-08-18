@@ -208,6 +208,14 @@ const App = () => {
                   }
                 />
                 <Route
+                  path="/admin-dashboard/add-job"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/admin-dashboard/settings"
                   element={
                     <ProtectedRoute allowedRoles={['admin']}>
