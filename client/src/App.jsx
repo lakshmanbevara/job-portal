@@ -71,11 +71,11 @@ const App = () => {
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/jobs" element={<Jobs />} />
-                <Route path="/jobs/detail/:id" element={<JobDetails />} />
-                <Route path="/jobs/:id" element={<JobDetails />} />
-                <Route path="/companies" element={<Companies />} />
-                <Route path="/companies/:id" element={<CompanyDetails />} />
+                <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
+                <Route path="/jobs/detail/:id" element={<ProtectedRoute><JobDetails /></ProtectedRoute>} />
+                <Route path="/jobs/:id" element={<ProtectedRoute><JobDetails /></ProtectedRoute>} />
+                <Route path="/companies" element={<ProtectedRoute><Companies /></ProtectedRoute>} />
+                <Route path="/companies/:id" element={<ProtectedRoute><CompanyDetails /></ProtectedRoute>} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/profile" element={<ProfileRedirect />} />
