@@ -555,8 +555,8 @@ const AdminDashboard = () => {
                               <div className="flex flex-col">
                                 <span className="text-xs font-bold text-primary">Jobs ({companyJobs.length})</span>
                                 {companyJobs.length > 0 && (
-                                  <span className="text-[10px] text-slate-500 mt-0.5 line-clamp-1 max-w-[150px]" title={companyJobs.map(j => j.title).join(', ')}>
-                                    {companyJobs.map(j => j.title).join(', ')}
+                                  <span className="text-[10px] text-slate-500 mt-0.5 line-clamp-1 max-w-[150px]" title={companyJobs.map(j => `${j.title} (${j.jobType})`).join(', ')}>
+                                    {companyJobs.map(j => `${j.title} (${j.jobType})`).join(', ')}
                                   </span>
                                 )}
                               </div>

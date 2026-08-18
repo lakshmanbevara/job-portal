@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
-import { FiUser, FiBriefcase, FiMail, FiLock, FiGlobe, FiMapPin, FiCpu } from 'react-icons/fi';
+import { FiUser, FiBriefcase, FiMail, FiLock, FiGlobe, FiMapPin, FiCpu, FiEye, FiEyeOff } from 'react-icons/fi';
 
 const Register = () => {
   const { registerStudent, registerCompany } = useAuth();
@@ -15,7 +15,7 @@ const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [showPassword, setShowPassword] = useState(false);
   // Company Specific Form States
   const [companyName, setCompanyName] = useState('');
   const [website, setWebsite] = useState('');
@@ -146,13 +146,20 @@ const Register = () => {
               <div className="relative">
                 <FiLock className="absolute left-3.5 top-3.5 text-slate-400" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Minimum 6 characters"
-                  className="w-full pl-10 pr-4 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition-colors"
+                  className="w-full pl-10 pr-10 py-3 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-650 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition-colors"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                >
+                  {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
