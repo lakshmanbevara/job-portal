@@ -82,6 +82,11 @@ const AdminDashboard = () => {
   const [editCompanyName, setEditCompanyName] = useState('');
   const [editLogoUrl, setEditLogoUrl] = useState('');
   const [editLogoPreview, setEditLogoPreview] = useState('');
+  const [editLocation, setEditLocation] = useState('');
+  const [editWebsite, setEditWebsite] = useState('');
+  const [editIndustry, setEditIndustry] = useState('');
+  const [editDesc, setEditDesc] = useState('');
+  const [editEmployeeCount, setEditEmployeeCount] = useState('');
   const [savingCompany, setSavingCompany] = useState(false);
   const editLogoRef = useRef(null);
 
@@ -180,6 +185,11 @@ const AdminDashboard = () => {
     setEditCompanyName(company.companyName);
     setEditLogoUrl(company.logo || '');
     setEditLogoPreview(company.logo || '');
+    setEditLocation(company.location || '');
+    setEditWebsite(company.website || '');
+    setEditIndustry(company.industry || '');
+    setEditDesc(company.description || '');
+    setEditEmployeeCount(company.employeeCount || '');
   };
 
   const handleEditLogoChange = (e) => {
@@ -200,7 +210,12 @@ const AdminDashboard = () => {
     try {
       const res = await API.put(`/admin/companies/${editingCompany._id}`, {
         companyName: editCompanyName,
-        logoUrl: editLogoUrl
+        logoUrl: editLogoUrl,
+        location: editLocation,
+        website: editWebsite,
+        industry: editIndustry,
+        description: editDesc,
+        employeeCount: editEmployeeCount
       });
       if (res.data.success) {
         toast.success('Company updated successfully!');
@@ -1298,8 +1313,8 @@ const AdminDashboard = () => {
         {/* ── Edit Company Modal ── */}
         {editingCompany && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-            <div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700/60 animate-in zoom-in-95 duration-200">
-              <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700/60 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700/60 animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+              <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700/60 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 flex-shrink-0">
                 <h3 className="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
                   <FiEdit className="text-primary" /> Edit Company Profile
                 </h3>
@@ -1307,16 +1322,68 @@ const AdminDashboard = () => {
                   <FiX className="w-5 h-5" />
                 </button>
               </div>
-              <form onSubmit={handleSaveCompanyEdit} className="p-6 space-y-5">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Company Name</label>
-                  <input
-                    type="text"
-                    value={editCompanyName}
-                    onChange={e => setEditCompanyName(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/70 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition"
-                  />
+              <form onSubmit={handleSaveCompanyEdit} className="p-6 space-y-5 overflow-y-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Company Name</label>
+                    <input
+                      type="text"
+                      value={editCompanyName}
+                      onChange={e => setEditCompanyName(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/70 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location</label>
+                    <input
+                      type="text"
+                      value={editLocation}
+                      onChange={e => setEditLocation(e.target.value)}
+                      className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/70 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition"
+                    />
+                  </div>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Industry</label>
+                    <input
+                      type="text"
+                      value={editIndustry}
+                      onChange={e => setEditIndustry(e.target.value)}
+                      className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/70 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Website URL</label>
+                    <input
+                      type="url"
+                      value={editWebsite}
+                      onChange={e => setEditWebsite(e.target.value)}
+                      className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/70 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Employee Count</label>
+                    <input
+                      type="number"
+                      value={editEmployeeCount}
+                      onChange={e => setEditEmployeeCount(e.target.value)}
+                      className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/70 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition"
+                    />
+                  </div>
+                  
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Company Description</label>
+                    <textarea
+                      value={editDesc}
+                      onChange={e => setEditDesc(e.target.value)}
+                      rows="3"
+                      className="w-full px-4 py-3 text-sm bg-slate-50 dark:bg-slate-700/70 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-white focus:outline-none focus:border-primary transition resize-none"
+                    />
+                  </div>
                 </div>
                 
                 <div className="space-y-1.5">
@@ -1339,7 +1406,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                <div className="pt-2 flex justify-end gap-3">
+                <div className="pt-2 flex justify-end gap-3 flex-shrink-0 border-t border-slate-100 dark:border-slate-700/60 mt-4">
                   <button type="button" onClick={() => setEditingCompany(null)} className="px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition">
                     Cancel
                   </button>

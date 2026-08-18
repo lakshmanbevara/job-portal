@@ -207,7 +207,7 @@ exports.registerCompanyByAdmin = async (req, res, next) => {
 exports.updateCompanyByAdmin = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { companyName, logoUrl } = req.body;
+    const { companyName, logoUrl, location, website, industry, description, employeeCount } = req.body;
 
     const company = await Company.findById(id);
     if (!company) {
@@ -223,6 +223,11 @@ exports.updateCompanyByAdmin = async (req, res, next) => {
     if (logoUrl !== undefined) {
       company.logo = logoUrl;
     }
+    if (location !== undefined) company.location = location;
+    if (website !== undefined) company.website = website;
+    if (industry !== undefined) company.industry = industry;
+    if (description !== undefined) company.description = description;
+    if (employeeCount !== undefined) company.employeeCount = Number(employeeCount);
 
     await company.save();
 
