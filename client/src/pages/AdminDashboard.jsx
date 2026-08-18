@@ -535,6 +535,7 @@ const AdminDashboard = () => {
                     <tr className="border-b border-slate-100 dark:border-slate-700 text-slate-400 font-bold uppercase tracking-wider">
                       <th className="py-3 px-4">Company</th>
                       <th className="py-3 px-4">Location</th>
+                      <th className="py-3 px-4">Jobs</th>
                       <th className="py-3 px-4">Status</th>
                       <th className="py-3 px-4">Verify</th>
                       <th className="py-3 px-4 text-center">Actions</th>
@@ -547,6 +548,21 @@ const AdminDashboard = () => {
                           <Link to={`/companies/${company._id}`} className="hover:text-primary hover:underline">{company.companyName}</Link>
                         </td>
                         <td className="py-4 px-4 text-slate-550 dark:text-slate-350">{company.location}</td>
+                        <td className="py-4 px-4">
+                          {(() => {
+                            const companyJobs = jobs.filter(j => j.company?._id === company._id);
+                            return (
+                              <div className="flex flex-col">
+                                <span className="text-xs font-bold text-primary">Jobs ({companyJobs.length})</span>
+                                {companyJobs.length > 0 && (
+                                  <span className="text-[10px] text-slate-500 mt-0.5 line-clamp-1 max-w-[150px]" title={companyJobs.map(j => j.title).join(', ')}>
+                                    {companyJobs.map(j => j.title).join(', ')}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })()}
+                        </td>
                         <td className="py-4 px-4">
                           <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] ${company.isVerified ? 'bg-success/15 text-success' : 'bg-warning/15 text-warning'}`}>
                             {company.isVerified ? 'Verified ✓' : 'Pending'}
