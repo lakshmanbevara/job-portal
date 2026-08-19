@@ -31,9 +31,10 @@ app.use(async (req, res, next) => {
 });
 
 // Body parser
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Cookie parser
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
 // HTTP request logger
