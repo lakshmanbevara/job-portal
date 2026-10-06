@@ -46,7 +46,7 @@ The application features a premium UI theme with custom glassmorphism components
 
 - **Frontend**: React (Vite-powered), Tailwind CSS v4, Material UI (MUI), Framer Motion, Chart.js (via react-chartjs-2), React Icons, React Toastify.
 - **Backend**: Node.js, Express.js, JWT Authentication (secure cookies), Bcrypt, Multer (local file storage uploads), Nodemailer, MongoDB, Mongoose.
-- **Development Tools**: Concurrently (run both client & server using a single command).
+- **Development Tools**: Concurrently (run both frontend & server using a single command).
 >>>>>>> abc9896c6bdaa8df37f2e0488dff6168e93f4135
 
 ---
@@ -79,7 +79,7 @@ job-portal/ (root)
     └── package.json
 =======
 StudentJobPortal
-├── client               # Frontend React Application (Vite + Tailwind v4)
+├── frontend             # Frontend React Application (Vite + Tailwind v4)
 │   ├── public
 │   ├── src
 │   │   ├── assets
@@ -142,7 +142,7 @@ Run both the frontend and backend servers concurrently from the root directory:
 ```bash
 npm run dev
 ```
-This starts both the API server (port `5000`) and the React client (port `5173`) simultaneously.
+This starts both the API server (port `5000`) and the React frontend (port `5173`) simultaneously.
 
 *Or, you can run them individually:*
 
@@ -186,7 +186,7 @@ Run the installation command from the **root workspace directory** (`E:\project`
 ```bash
 npm run install-all
 ```
-This script will automatically trigger package installations in the root directory, inside `/server` and inside `/client`.
+This script will automatically trigger package installations in the root directory, inside `/server` and inside `/frontend`.
 
 ### Step 2: Configure Environment Variables
 A configured `.env` file has been pre-created under the `server` directory (`server/.env`):
